@@ -1,18 +1,27 @@
 package com.yydcdut.sms
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import com.yydcdut.sms.fragment.IgnoreNumberFragment
+import com.yydcdut.sms.fragment.IgnoreTextFragment
 import com.yydcdut.sms.fragment.MainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dialog_phone.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener {
     private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +38,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         currentFragment = MainFragment.getInstance()
         replaceFragment(currentFragment as MainFragment)
+
+        txt_nav_title.setOnClickListener(this)
     }
 
     override fun onBackPressed() {
@@ -65,10 +76,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.nav_ignore_number -> {
-
+                if (currentFragment !is IgnoreNumberFragment) {
+                    currentFragment = IgnoreNumberFragment.getInstance()
+                    replaceFragment(currentFragment as IgnoreNumberFragment)
+                }
             }
             R.id.nav_ignore_text -> {
-
+                if (currentFragment !is IgnoreTextFragment) {
+                    currentFragment = IgnoreTextFragment.getInstance()
+                    replaceFragment(currentFragment as IgnoreTextFragment)
+                }
             }
 //            R.id.nav_manage -> {
 //
@@ -89,5 +106,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.layout_fragment, fragment)
         ft.commit()
+    }
+
+    override fun onClick(v: View) {
+        if (v == txt_nav_title) {
+            val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
+            AlertDialog.Builder(this)
+                    .setTitle("电话")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                        Utils.savePhone(edit_phone.text.toString())
+                        dialog.dismiss()
+                    })
+                    .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                    .show()
+        }
     }
 }

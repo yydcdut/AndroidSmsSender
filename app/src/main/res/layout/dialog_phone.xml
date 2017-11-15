@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <EditText
+        android:id="@+id/edit_phone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone"
+        android:numeric="integer"
+        android:singleLine="true"
+        android:textColor="@android:color/black"/>
+</android.support.design.widget.TextInputLayout>

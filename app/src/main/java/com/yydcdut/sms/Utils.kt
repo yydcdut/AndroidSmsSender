@@ -1,5 +1,6 @@
 package com.yydcdut.sms
 
+import android.content.Context
 import android.os.Environment
 import java.io.*
 
@@ -77,4 +78,9 @@ object Utils {
         }
     }
 
+    fun savePhone(phone: String) =
+            App.instance().getSharedPreferences("sms", Context.MODE_PRIVATE).edit().putString("phone", phone).commit()
+
+    fun getPhone(): String =
+            App.instance().getSharedPreferences("sms", Context.MODE_PRIVATE).getString("phone", "")
 }
