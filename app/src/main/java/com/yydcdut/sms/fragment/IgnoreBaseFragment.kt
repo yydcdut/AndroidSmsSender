@@ -27,7 +27,7 @@ open abstract class IgnoreBaseFragment : Fragment(), SlideAndDragListView.OnItem
     private val mMenu = Menu(true)
     private val mHandler = Handler(Looper.getMainLooper(), this)
 
-    init {
+    private fun initMenu() {
         val builder = MenuItem.Builder()
         builder.background = ColorDrawable(activity.resources.getColor(R.color.colorPrimary))
         builder.text = "删除"
@@ -42,6 +42,7 @@ open abstract class IgnoreBaseFragment : Fragment(), SlideAndDragListView.OnItem
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initMenu()
         Thread(getDataRunnable).start()
         fab_ignore.setOnClickListener(this)
     }
