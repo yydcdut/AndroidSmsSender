@@ -6,15 +6,19 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.EditText
 import com.yydcdut.sdlv.Menu
 import com.yydcdut.sdlv.MenuItem
 import com.yydcdut.sdlv.SlideAndDragListView
 import com.yydcdut.sms.R
 import com.yydcdut.sms.list.ListAdapter
+import kotlinx.android.synthetic.main.dialog_phone.*
+import kotlinx.android.synthetic.main.dialog_phone.view.*
 import kotlinx.android.synthetic.main.frag_ignore.*
 
 /**
@@ -69,12 +73,20 @@ open abstract class IgnoreBaseFragment : Fragment(), SlideAndDragListView.OnItem
     abstract fun replace(list: MutableList<String>)
 
     override fun handleMessage(msg: Message): Boolean {
-        setData(msg.obj as MutableList<String>)
+        when (msg.what) {
+            0 -> {
+                setData(msg.obj as MutableList<String>)
+            }
+            1 -> {
+
+            }
+        }
         return false
     }
 
     private val getDataRunnable = Runnable {
         val msg = mHandler.obtainMessage()
+        msg.what = 0
         msg.obj = getData()
         mHandler.sendMessage(msg)
     }
@@ -83,22 +95,29 @@ open abstract class IgnoreBaseFragment : Fragment(), SlideAndDragListView.OnItem
         replace(mDataList!!)
     }
 
+    abstract fun getDialogTitle(): String
+
     override fun onClick(v: View) {
         if (v == fab_ignore) {
-//            val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
-//            AlertDialog.Builder(activity)
-//                    .setTitle("过滤数据")
-//                    .setView(dialogView)
-//                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-//                        Utils.savePhone(edit_phone.text.toString())
-//                        dialog.dismiss()
-//                    })
-//                    .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
-//                    .show()
-        } else {
-
+            val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
+            dialogView.edit_phone
+            AlertDialog.Builder(activity)
+                    .setTitle(getDialogTitle())
+                    .setView(dialogView)
+                    .setPositiveButton("OK", { dialog, _ ->
+                        val content = ((dialog as AlertDialog).edit_phone as EditText).text.toString()
+                        if (isRight(content)) {
+                            mDataList!!.add(content)
+                            (sdlv_ignore.adapter as BaseAdapter).notifyDataSetChanged()
+                            Thread(replaceRunnable).start()
+                        }
+                        dialog.dismiss()
+                    })
+                    .setNegativeButton("Cancel", { dialog, _ -> dialog.dismiss() })
+                    .show()
         }
-
     }
+
+    abstract fun isRight(content: String): Boolean
 
 }

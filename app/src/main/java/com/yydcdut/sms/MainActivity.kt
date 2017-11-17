@@ -18,6 +18,8 @@ import com.yydcdut.sms.fragment.IgnoreTextFragment
 import com.yydcdut.sms.fragment.MainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dialog_phone.*
+import kotlinx.android.synthetic.main.dialog_phone.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -115,12 +117,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onClick(v: View) {
         if (v == txt_nav_title) {
             val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
-            dialogView.findViewById<View>(R.id.edit_phone).setOnClickListener(this)
+            dialogView.edit_phone.setOnClickListener(this)
             AlertDialog.Builder(this)
                     .setTitle("电话")
                     .setView(dialogView)
                     .setPositiveButton("OK", { dialog, _ ->
-                        val phone = ((dialog as AlertDialog).findViewById<View>(R.id.edit_phone) as EditText).text.toString()
+                        val phone = ((dialog as AlertDialog).edit_phone as EditText).text.toString()
                         Utils.savePhone(phone)
                         phoneTextView!!.text = phone
                         dialog.dismiss()
