@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,7 +9,17 @@
         android:id="@+id/sdlv_ignore"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="@null"/>
+        android:divider="@android:color/black"
+        android:dividerHeight="0.5dip"
+        android:listSelector="@drawable/list_selector"/>
+
+    <TextView
+        android:id="@+id/txt_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="没有数据"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_ignore"
@@ -19,4 +29,4 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

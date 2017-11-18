@@ -18,14 +18,11 @@ import kotlinx.android.synthetic.main.frag_main.*
  */
 open class MainFragment : Fragment(), View.OnClickListener, SmsObservable {
     companion object {
-        fun getInstance(): MainFragment {
-            return MainFragment()
-        }
+        fun getInstance(): MainFragment = MainFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_main, null, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.frag_main, null, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +31,7 @@ open class MainFragment : Fragment(), View.OnClickListener, SmsObservable {
     }
 
     override fun onClick(v: View) {
-        startActivity(Intent(activity, SmsService::class.java))
+        activity.startService(Intent(activity, SmsService::class.java))
     }
 
     override fun onReceiveSms(sms: SmsSender) {

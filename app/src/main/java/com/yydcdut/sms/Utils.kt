@@ -1,14 +1,13 @@
 package com.yydcdut.sms
 
 import android.content.Context
-import android.os.Environment
 import java.io.*
 
 /**
  * Created by yuyidong on 2017/11/12.
  */
 object Utils {
-    private val DIR = Environment.getDataDirectory()
+    private val DIR = App.instance().cacheDir
 
     private val IGNORE_NUMBER = "ignore_number"
     private val IGNORE_TEXT = "ignore_text"
@@ -41,13 +40,29 @@ object Utils {
         closeable?.close()
     }
 
-    fun readIgnoreNumber(): MutableList<String> = readIgnoreFile(DIR.absolutePath + File.separator + IGNORE_NUMBER)
+    fun readIgnoreNumber(lock: Any): MutableList<String> {
+        synchronized(lock) {
+            return readIgnoreFile(DIR.absolutePath + File.separator + IGNORE_NUMBER)
+        }
+    }
 
-    fun saveIgnoreNumber(list: MutableList<String>) = saveIgnoreFile(DIR.absolutePath + File.separator + IGNORE_NUMBER, format(list))
+    fun saveIgnoreNumber(list: MutableList<String>, lock: Any) {
+        synchronized(lock) {
+            return saveIgnoreFile(DIR.absolutePath + File.separator + IGNORE_NUMBER, format(list))
+        }
+    }
 
-    fun readIgnoreText(): MutableList<String> = readIgnoreFile(DIR.absolutePath + File.separator + IGNORE_TEXT)
+    fun readIgnoreText(lock: Any): MutableList<String> {
+        synchronized(lock) {
+            return readIgnoreFile(DIR.absolutePath + File.separator + IGNORE_TEXT)
+        }
+    }
 
-    fun saveIgnoreText(list: MutableList<String>) = saveIgnoreFile(DIR.absolutePath + File.separator + IGNORE_TEXT, format(list))
+    fun saveIgnoreText(list: MutableList<String>, lock: Any) {
+        synchronized(lock) {
+            return saveIgnoreFile(DIR.absolutePath + File.separator + IGNORE_TEXT, format(list))
+        }
+    }
 
     private fun format(list: MutableList<String>): String {
         val set: HashSet<String> = HashSet(list)

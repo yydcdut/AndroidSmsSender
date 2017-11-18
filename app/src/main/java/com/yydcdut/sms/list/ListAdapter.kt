@@ -24,7 +24,7 @@ class ListAdapter(context: Context, list: MutableList<String>) : BaseAdapter() {
 
     override fun getItem(position: Int): String = mDataList[position]
 
-    override fun getItemId(position: Int): Long = mDataList[position].hashCode() as Long
+    override fun getItemId(position: Int): Long = mDataList[position].hashCode().toLong()
 
     override fun getCount(): Int = mDataList.size
 

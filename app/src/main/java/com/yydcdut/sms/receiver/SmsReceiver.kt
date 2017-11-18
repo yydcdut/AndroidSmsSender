@@ -10,6 +10,7 @@ import android.telephony.SmsMessage
 import android.text.TextUtils
 import com.yydcdut.sms.Utils
 import com.yydcdut.sms.entity.SmsSender
+import com.yydcdut.sms.lock.Lock
 import com.yydcdut.sms.observer.SmsObserver
 
 /**
@@ -42,12 +43,12 @@ class SmsReceiver : BroadcastReceiver(), Runnable, Handler.Callback {
         if (smsSender == null) {
             return
         }
-        val numberList = Utils.readIgnoreNumber()
+        val numberList = Utils.readIgnoreNumber(Lock.getInstance().getIgnoreNumberLock())
         var ignore: Boolean = numberList.any { TextUtils.equals(it, smsSender!!.address) }
         if (ignore) {
             return
         }
-        val textList = Utils.readIgnoreText()
+        val textList = Utils.readIgnoreText(Lock.getInstance().getIgnoreTextLock())
         ignore = textList.any { smsSender!!.content.contains(it, true) }
         if (ignore) {
             return

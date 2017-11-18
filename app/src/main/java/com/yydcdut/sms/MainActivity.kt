@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.dialog_phone.*
 import kotlinx.android.synthetic.main.dialog_phone.view.*
-import kotlinx.android.synthetic.main.nav_header_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         currentFragment = MainFragment.getInstance()
         replaceFragment(currentFragment as MainFragment)
 
-        phoneTextView = nav_view.getHeaderView(0).findViewById<View>(R.id.txt_nav_title) as TextView
+        phoneTextView = nav_view.getHeaderView(0).txt_nav_title
         phoneTextView!!.setOnClickListener(this)
         phoneTextView!!.text = Utils.getPhone()
     }
@@ -57,15 +57,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
@@ -115,20 +111,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onClick(v: View) {
-        if (v == txt_nav_title) {
-            val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
-            dialogView.edit_phone.setOnClickListener(this)
-            AlertDialog.Builder(this)
-                    .setTitle("电话")
-                    .setView(dialogView)
-                    .setPositiveButton("OK", { dialog, _ ->
-                        val phone = ((dialog as AlertDialog).edit_phone as EditText).text.toString()
-                        Utils.savePhone(phone)
-                        phoneTextView!!.text = phone
-                        dialog.dismiss()
-                    })
-                    .setNegativeButton("Cancel", { dialog, _ -> dialog.dismiss() })
-                    .show()
-        }
+        val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
+        dialogView.edit_phone.setOnClickListener(this)
+        AlertDialog.Builder(this)
+                .setTitle("电话")
+                .setView(dialogView)
+                .setPositiveButton("OK", { dialog, _ ->
+                    val phone = ((dialog as AlertDialog).edit_phone as EditText).text.toString()
+                    Utils.savePhone(phone)
+                    phoneTextView!!.text = phone
+                    dialog.dismiss()
+                })
+                .setNegativeButton("Cancel", { dialog, _ -> dialog.dismiss() })
+                .show()
     }
 }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import android.telephony.SmsManager
+import com.yydcdut.sms.Utils
 import com.yydcdut.sms.entity.SmsSender
 import com.yydcdut.sms.observer.SmsObservable
 import com.yydcdut.sms.observer.SmsObserver
@@ -32,7 +33,6 @@ class SmsService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        upperPriority()
         if (sendPiBroadcastReceiver == null) {
             sentPI = PendingIntent.getBroadcast(this, 0, Intent(SENT_SMS_ACTION), 0)
             registerReceiver(sendPiBroadcastReceiver, IntentFilter(SENT_SMS_ACTION))
@@ -49,6 +49,7 @@ class SmsService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        upperPriority()
         return START_STICKY
     }
 
@@ -65,16 +66,15 @@ class SmsService : Service() {
         override fun onReceiveSms(smsSender: SmsSender) {
             val sms = SmsManager.getDefault()
             val divideContents = sms.divideMessage(smsSender.address + "\n" + smsSender.content)
+            val phone = Utils.getPhone()
             for (text in divideContents) {
-//                sms.sendTextMessage("", null, text, sentPI, deliverPI)
+                sms.sendTextMessage(phone, null, text, sentPI, deliverPI)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (sendSms != null) {
-            SmsObserver.getInstance().unregister(sendSms!!)
-        }
+        sendSms?.let { SmsObserver.getInstance().unregister(it) }
     }
 }
