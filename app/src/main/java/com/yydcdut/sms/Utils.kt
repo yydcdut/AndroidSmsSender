@@ -1,7 +1,9 @@
 package com.yydcdut.sms
 
 import android.content.Context
+import android.text.TextUtils
 import java.io.*
+import java.util.regex.Pattern
 
 /**
  * Created by yuyidong on 2017/11/12.
@@ -67,9 +69,7 @@ object Utils {
     private fun format(list: MutableList<String>): String {
         val set: HashSet<String> = HashSet(list)
         val sb = StringBuilder()
-        for (text in set) {
-            sb.append(text).append(";")
-        }
+        set.filterNot { TextUtils.isEmpty(it) }.forEach { sb.append(it).append(";") }
         return sb.toString()
     }
 
@@ -82,7 +82,7 @@ object Utils {
         }
         val content = readStringFromFile(file)
         val result = content.split(";")
-        list += result
+        result.filterNotTo(list) { TextUtils.isEmpty(it) }
         return list
     }
 
@@ -98,4 +98,9 @@ object Utils {
 
     fun getPhone(): String =
             App.instance().getSharedPreferences("sms", Context.MODE_PRIVATE).getString("phone", "")
+
+    fun isPhone(str: String): Boolean {
+        val regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$"
+        return Pattern.compile(regExp).matcher(str).matches()
+    }
 }

@@ -135,11 +135,11 @@ open abstract class IgnoreBaseFragment : Fragment(), SlideAndDragListView.OnItem
 
     private fun showDialog(title: String, original: String, callback: OnDialogClickCallback) {
         val dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_phone, null, false)
-        dialogView.edit_phone.setText(original)
+        dialogView.edit_dialog.setText(original)
         AlertDialog.Builder(activity)
                 .setTitle(title)
                 .setView(dialogView)
-                .setPositiveButton("OK", { dialog, _ -> callback?.onClick(dialog, ((dialog as AlertDialog).edit_phone as EditText).text.toString()) })
+                .setPositiveButton("OK", { dialog, _ -> callback?.onClick(dialog, ((dialog as AlertDialog).edit_dialog as EditText).text.toString()) })
                 .setNegativeButton("Cancel", { dialog, _ -> dialog.dismiss() })
                 .show()
     }

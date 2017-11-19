@@ -6,11 +6,10 @@
     android:padding="5dp">
 
     <EditText
-        android:id="@+id/edit_phone"
+        android:id="@+id/edit_dialog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone"
-        android:numeric="integer"
+        android:hint="请输入"
         android:singleLine="true"
         android:textColor="@android:color/black"/>
 </android.support.design.widget.TextInputLayout>

@@ -12,12 +12,14 @@ import com.yydcdut.sms.Utils
 import com.yydcdut.sms.entity.SmsSender
 import com.yydcdut.sms.observer.SmsObservable
 import com.yydcdut.sms.observer.SmsObserver
+import com.yydcdut.sms.ping.OnSmsServicePing
+import com.yydcdut.sms.ping.Pinger
 
 
 /**
  * Created by yuyidong on 2017/11/12.
  */
-class SmsService : Service() {
+class SmsService : Service(), OnSmsServicePing {
 
     private val SENT_SMS_ACTION = "SENT_SMS_ACTION"
     private val DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION"
@@ -44,6 +46,12 @@ class SmsService : Service() {
         if (sendSms == null) {
             sendSms = SendSms(sentPI!!, deliverPI!!)
             SmsObserver.getInstance().register(sendSms!!)
+        }
+        Pinger.getInstance().registerOnSmsService(this)
+        Pinger.getInstance().sendMainActivityPing()
+        ServiceManager.getInstance().startDeamonService()
+        if (!ServiceManager.getInstance().isDeamonAlive()) {
+            ServiceManager.getInstance().bindDeamonService()
         }
     }
 
@@ -76,5 +84,14 @@ class SmsService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         sendSms?.let { SmsObserver.getInstance().unregister(it) }
+        Pinger.getInstance().unregisterOnSmsService()
+    }
+
+    override fun onPing(time: Long) {
+        Pinger.getInstance().sendMainActivityPing()
+        if (!ServiceManager.getInstance().isDeamonAlive()) {
+            ServiceManager.getInstance().bindDeamonService()
+            ServiceManager.getInstance().startDeamonService()
+        }
     }
 }
