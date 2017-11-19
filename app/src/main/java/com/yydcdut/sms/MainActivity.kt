@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onClick(v: View) {
         val dialogView = LayoutInflater.from(v.context).inflate(R.layout.dialog_phone, null, false)
-        dialogView.edit_dialog.setOnClickListener(this)
         dialogView.edit_dialog.setText(Utils.getPhone())
         AlertDialog.Builder(this)
                 .setTitle("电话")
