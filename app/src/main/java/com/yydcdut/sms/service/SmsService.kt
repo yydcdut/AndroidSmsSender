@@ -73,7 +73,8 @@ class SmsService : Service(), OnSmsServicePing {
 
         override fun onReceiveSms(smsSender: SmsSender) {
             val sms = SmsManager.getDefault()
-            val divideContents = sms.divideMessage(smsSender.address + "\n" + smsSender.content)
+            val content = smsSender.address + "  " + smsSender.content
+            val divideContents = sms.divideMessage(content)
             val phone = Utils.getPhone()
             for (text in divideContents) {
                 sms.sendTextMessage(phone, null, text, sentPI, deliverPI)
